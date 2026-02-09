@@ -18,8 +18,8 @@ dbConn()
 app.use(cors())
 
 app.post("/api/webhook" , express.raw( { type: 'application/json' }),catchError(async (req, res, next) => {
-    const sig = req.headers['stripe-signature'];
-    const event = stripe.webhooks.constructEvent(req.body,sig, process.env.STRIPE_WEBHOOK_SECRET);
+    const sig = req.headers['stripe-signature'].toString()
+    const event = stripe.webhooks.constructEvent(req.body,sig, process.env.STRIPE_WEBHOOK_SECRET)
     let checkout 
     if(event.type == 'checkout.session.completed'){
         checkout = event.data.object
