@@ -17,11 +17,15 @@ const port = process.env.PORT || 3000
 dbConn()
 app.use(cors())
 
-app.post("/api/webhook" , express.raw( { type: 'application/json' }),catchError(async (req, res, next) => {
+app.post("/api/webhook", express.raw({ type: 'application/json' }), catchError(async (req, res, next) => {
+    console.log('🔍 Webhook Debug:')
+    console.log('Secret exists:', !!process.env.STRIPE_WEBHOOK_SECRET)
+    console.log('Body type:', typeof req.body)
+    console.log('Signature exists:', !!req.headers['stripe-signature'])
     const sig = req.headers['stripe-signature'].toString()
-    const event = stripe.webhooks.constructEvent(req.body,sig, process.env.STRIPE_WEBHOOK_SECRET)
-    let checkout 
-    if(event.type == 'checkout.session.completed'){
+    const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+    let checkout
+    if (event.type == 'checkout.session.completed') {
         checkout = event.data.object
     }
     res.status(200).json({ message: "success", checkout })
@@ -30,7 +34,7 @@ app.post("/api/webhook" , express.raw( { type: 'application/json' }),catchError(
 
 
 app.use(express.json())
-app.use('/uploads',express.static('uploads'))
+app.use('/uploads', express.static('uploads'))
 bootstrap(app)
 
 
