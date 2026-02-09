@@ -23,7 +23,7 @@ app.post("/api/webhook", express.raw({ type: 'application/json' }), catchError(a
     console.log('Body type:', typeof req.body)
     console.log('Signature exists:', !!req.headers['stripe-signature'])
     const sig = req.headers['stripe-signature'].toString()
-    const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET)
+    const event = stripe.webhooks.constructEvent(req.body, sig, "whsec_TdF0ndRXBxbv00O1yBY4K5WH28MZ6hMG")
     let checkout
     if (event.type == 'checkout.session.completed') {
         checkout = event.data.object
